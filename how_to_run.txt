@@ -1,0 +1,7 @@
+Running the Robot
+Step 1: Upload Arduino Code
+Upload the robot_control.ino file to the Arduino using the Arduino IDE.
+
+Step 2: Run Raspberry Pi Code
+Run the main control loop on the Raspberry Pi:
+python3 main.py
