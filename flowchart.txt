@@ -1,0 +1,68 @@
+
+
+## Limitations
+- The element detection feature assumes a hypothetical sensor for detecting known and new elements.
+- Thunderstorm detection relies on the AS3935 lightning sensor and may have limitations depending on environmental factors.
+
+
+
+                                    +---------------------------------+
+                                    |         Start System            |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    | Initialize Components:          |
+                                    | - Sensors (element, weather)    |
+                                    | - Motors, LEDs, Servo Arm       |
+                                    | - GPS, Bluetooth, Ultrasonic    |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  Sensor Data Collection         |
+                                    |  - Water, Soil, pH, Temp        |
+                                    |  - Element Detection            |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  Element Detection Check:       |
+                                    | - Known element? Continue       |
+                                    | - Unknown element? Collect      |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  Thunderstorm Detection         |
+                                    |  - Storm detected?              |
+                                    |    Stop operations, return      |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  Obstacle Detection and Avoid   |
+                                    |  - Use Ultrasonic Sensors       |
+                                    |  - Adjust path if obstacle      |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  Terrain Adaptation             |
+                                    |  - Detect water, switch to      |
+                                    |    water propulsion             |
+                                    |  - Land? Use wheels             |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |  GPS Navigation                 |
+                                    |  - Navigate using GPS           |
+                                    |  - Return to base if battery    |
+                                    +---------------------------------+
+                                                 |
+                                                 v
+                                    +---------------------------------+
+                                    |         End Operation           |
+                                    +---------------------------------+
+
