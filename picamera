@@ -1,0 +1,17 @@
+from picamera import PiCamera
+from time import sleep
+import os
+
+# Initialize Pi Camera
+camera = PiCamera()
+
+# Define where to store the image
+image_path = '/home/pi/captured_image.jpg'
+
+# Capture the image
+camera.start_preview()
+sleep(2)  # Allow the camera to adjust lighting
+camera.capture(image_path)
+camera.stop_preview()
+
+print(f"Image saved at {image_path}")
