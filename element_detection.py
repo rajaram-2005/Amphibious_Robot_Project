@@ -1,47 +1,42 @@
-import cv2
-import numpy as np
-from tensorflow.keras.models import load_model
+import csv
+import time
+import os
+import bluetooth_comm  # Custom module for communication with Arduino (robotic arm control)
 
-# Load the pre-trained CNN model for element classification
-model = load_model('element_classification_model.h5')
+# Path to save element data
+data_file = "Data/new_element_data.csv"
+image_folder = "Data/element_images/"
 
-# Labels for elements (this is a simplified list for the demo; replace with 118 element labels)
-element_labels = ["Hydrogen", "Helium", "Lithium", "Beryllium", "Boron", "Carbon", ...]
+# Function to log new element data and trigger the robotic arm for sample collection
+def log_new_element_and_collect_sample(element_id, temperature, pressure, ph_level, image_path):
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Log the new element data in the CSV file
+    with open(data_file, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, element_id, temperature, pressure, ph_level, image_path])
+    
+    # Trigger the robotic arm to collect the sample
+    print(f"New element detected: {element_id}. Collecting sample using robotic arm.")
+    bluetooth_comm.send_to_arduino('C')  # Command to collect sample (Arduino controls the robotic arm)
+    
+    # Log event
+    log_event(f"New element detected: {element_id}, sample collected.")
+    
+    print(f"New element data logged and sample collected: {element_id}, Image: {image_path}")
 
-# Function to preprocess the captured image for the model
-def preprocess_image(img):
-    img = cv2.resize(img, (224, 224))  # Resize to match the model input size
-    img = img.astype("float") / 255.0  # Normalize the image
-    img = np.expand_dims(img, axis=0)  # Add batch dimension
-    return img
+# Function to log events
+def log_event(message):
+    timestamp = time.strftime("[%Y-%m-%d %H:%M:%S]")
+    with open("Data/logs/robot_log.txt", "a") as log_file:
+        log_file.write(f"{timestamp} {message}\n")
 
-# Function to predict the element based on the image
-def predict_element(img):
-    processed_img = preprocess_image(img)
-    predictions = model.predict(processed_img)
-    element_id = np.argmax(predictions)  # Get the predicted element ID
-    confidence = predictions[0][element_id]  # Confidence of the prediction
-    return element_labels[element_id], confidence
+# Example usage when a new element is detected
+element_id = 119  # Simulated new element ID
+temperature = 25.4  # Example sensor data
+pressure = 1013  # Example sensor data
+ph_level = 7.2  # Example sensor data
+image_path = os.path.join(image_folder, "element_119.jpg")
 
-# Initialize webcam or any connected camera
-cap = cv2.VideoCapture(0)
-
-while True:
-    ret, frame = cap.read()  # Capture frame-by-frame
-    if not ret:
-        break
-
-    # Show the captured frame
-    cv2.imshow('Element Detection', frame)
-
-    # Check for 'q' key press to exit
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-    # Predict the element from the current frame
-    element, confidence = predict_element(frame)
-    print(f"Detected Element: {element} with confidence {confidence:.2f}")
-
-# Release the camera and close windows
-cap.release()
-cv2.destroyAllWindows()
+# Log the new element data and trigger robotic arm for sample collection
+log_new_element_and_collect_sample(element_id, temperature, pressure, ph_level, image_path)
