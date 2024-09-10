@@ -9,4 +9,3 @@ def log_event(message):
 sensor_data = "Water Sensor: 550, Soil Moisture: 420"
 log_event(sensor_data)
 
-log_event("Action: Switching to water propulsion")
